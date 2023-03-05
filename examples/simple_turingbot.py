@@ -2,7 +2,7 @@ from os.path import join
 
 from sr.dataset import Dataset
 from sr.turingbot_demo.model import TuringBotModel
-from sr.turingbot_demo.operator_enum import AllowedOperator
+from sr.turingbot_demo.operators import AllowedOperator
 
 
 def main() -> None:

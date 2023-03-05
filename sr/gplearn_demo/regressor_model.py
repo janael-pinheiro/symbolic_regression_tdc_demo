@@ -14,7 +14,7 @@ from sr.gplearn_demo.parser import GPlearnParser
 
 @dataclass
 class GPLearnRegressorModel(AbstractModel):
-    feature_names: List[str]
+    feature_names: Union[List[str], None] = None
     random_state: int = 42
     equation_parser: EquationParser = GPlearnParser()
     n_generations: int = 100
