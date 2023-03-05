@@ -9,7 +9,7 @@ from sys import float_info
 from tempfile import TemporaryDirectory
 from time import sleep
 from typing import Any, List, Union
-from math import cos, sin
+from math import cos, sin, fmod
 
 from numpy import array
 from pandas import DataFrame
@@ -22,7 +22,7 @@ from sr.turingbot_demo.allow_target_delay_enum import AllowTargetDelayEnum
 from sr.turingbot_demo.bound_search_mode_enum import BoundSearchModeEnum
 from sr.turingbot_demo.force_all_variables_enum import ForceAllVariablesEnum
 from sr.turingbot_demo.integer_constants_enum import IntegerConstantsEnum
-from sr.turingbot_demo.operator_enum import AllowedOperator
+from sr.turingbot_demo.operators import AllowedOperator
 from sr.turingbot_demo.search_metric_enum import SearchMetricEnum
 from sr.turingbot_demo.test_sample_enum import TestSampleEnum
 from sr.turingbot_demo.train_test_split_enum import TrainTestSplitEnum
@@ -112,7 +112,10 @@ class TuringBotModel(AbstractModel):
         eval_globals = {"__builtins__": {
             "cos": cos,
             "sin": sin,
-            "abs": abs}}
+            "abs": abs,
+            "fmod": fmod,
+            "round": round,
+            "pow": pow}}
         predictions = predict(equation=equation, eval_globals=eval_globals, features=features)
         return array(predictions)
 

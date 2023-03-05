@@ -2,7 +2,7 @@ from pydantic.dataclasses import dataclass, Field
 from typing import List
 
 from sr.turingbot_demo.search_metric_enum import SearchMetricEnum
-from sr.turingbot_demo.operator_enum import AllowedOperator
+from sr.turingbot_demo.operators import AllowedOperator
 from sr.turingbot_demo.train_test_split_enum import TrainTestSplitEnum
 from sr.turingbot_demo.test_sample_enum import TestSampleEnum
 from sr.turingbot_demo.integer_constants_enum import IntegerConstantsEnum
