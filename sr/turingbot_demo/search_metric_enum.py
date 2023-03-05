@@ -1,0 +1,14 @@
+from enum import Enum
+
+
+class SearchMetricEnum(Enum):
+    MEAN_RELATIVE_ERROR = 1
+    ACCURACY = 2
+    MEAN_ERROR = 3
+    RMSE = 4
+    F_SCORE = 5
+    CORRELATION_COEFFICIENT = 6
+    HYBRID = 7
+    MAXIMUM_ERROR = 8
+    MAXIMUM_RELATIVE_ERROR = 9
+    NASH_SUTCLIFFE_EFFICIENCY = 10

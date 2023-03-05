@@ -1,0 +1,11 @@
+#General
+.csv
+
+#Python
+.ipynb_checkpoints
+.pkl
+__pycache__/
+.pytest_cache
+.coverage
+
+

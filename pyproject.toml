@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "symbolic-regression-tdc"
+version = "0.1.0"
+description = ""
+authors = ["Janael Pinheiro <ajanaelpinheiro@gmail.com>"]
+readme = "README.md"
+packages = [{include = "symbolic_regression_tdc"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+jupyterlab = "^3.6.1"
+pandas = "^1.5.3"
+numpy = "^1.24.2"
+pysr = "^0.11.15"
+typer = "^0.7.0"
+coverage = "^7.1.0"
+gplearn = "^0.4.2"
+sympy = "^1.11.1"
+tqdm = "^4.64.1"
+pydantic = "^1.10.5"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
