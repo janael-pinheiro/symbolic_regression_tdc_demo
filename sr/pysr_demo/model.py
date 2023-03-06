@@ -1,10 +1,9 @@
 import logging
 from dataclasses import dataclass, field
-from math import cos, exp, sin, sqrt, tan
 from os import cpu_count
 from typing import Dict, List, Union
 
-from numpy import array, mod, square
+from numpy import array
 from pandas import DataFrame
 from pysr import PySRRegressor
 
@@ -13,11 +12,12 @@ from sr.equation_parser import EquationParser
 from sr.exceptions import NotCreatedModel
 from sr.pysr_demo.operators import AllowedBinaryOperator, AllowUnaryOperator
 from sr.pysr_demo.parser import PySREquationParser
-from sr.utils import predict
+from sr.predictor import BinaryClassifierPredictor, Predictor
 
 
 @dataclass
 class PySRModel(AbstractModel):
+    predictor: Predictor = BinaryClassifierPredictor()
     binary_operators: List[str] = field(default_factory=lambda: [bo.value for bo in AllowedBinaryOperator])
     unary_operators: List[str] = field(default_factory=lambda: [uo.value for uo in AllowUnaryOperator])
     equation_parser: EquationParser = PySREquationParser()
@@ -80,16 +80,9 @@ class PySRModel(AbstractModel):
         return self.model
 
     def predict(self, equation: str, features: DataFrame) -> array:
-        eval_globals = {"__builtins__": {
-            "cos": cos,
-            "sin": sin,
-            "exp": exp,
-            "sqrt": sqrt,
-            "tan": tan,
-            "square": square,
-            "Abs": abs,
-            "Mod": mod}}
-        predictions = predict(equation=equation, eval_globals=eval_globals, features=features)
+        predictions = self.predictor.predict(
+            equation=equation,
+            features=features)
         return array(predictions)
 
     @property

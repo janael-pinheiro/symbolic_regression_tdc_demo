@@ -1,6 +1,8 @@
 import logging
 import os
 import signal
+from dataclasses import dataclass, field
+from math import cos, exp, fmod, sin, sqrt, tan
 from os import system
 from os.path import join
 from shutil import which
@@ -9,15 +11,13 @@ from sys import float_info
 from tempfile import TemporaryDirectory
 from time import sleep
 from typing import Any, List, Union
-from math import cos, sin, fmod
 
 from numpy import array
 from pandas import DataFrame
-from pydantic.dataclasses import Field, dataclass
 from tqdm import tqdm
 
 from sr.base_model import AbstractModel
-from sr.utils import predict
+from sr.predictor import BinaryClassifierPredictor, Predictor
 from sr.turingbot_demo.allow_target_delay_enum import AllowTargetDelayEnum
 from sr.turingbot_demo.bound_search_mode_enum import BoundSearchModeEnum
 from sr.turingbot_demo.force_all_variables_enum import ForceAllVariablesEnum
@@ -31,6 +31,7 @@ from sr.turingbot_demo.utils import ConfigurationFile
 
 @dataclass
 class TuringBotModel(AbstractModel):
+    predictor: Predictor = BinaryClassifierPredictor()
     timeout_seconds: int = 300
     early_stop_condition: float = 0.01
     search_metric: SearchMetricEnum = SearchMetricEnum.RMSE
@@ -45,7 +46,8 @@ class TuringBotModel(AbstractModel):
     allow_target_delay: AllowTargetDelayEnum = AllowTargetDelayEnum.YES
     force_all_variables: ForceAllVariablesEnum = ForceAllVariablesEnum.NO
     custom_formula: str = ""
-    allowed_functions: List[AllowedOperator] = Field(list(AllowedOperator))
+    allowed_functions: List[AllowedOperator] = field(
+        default_factory = lambda: list(AllowedOperator))
 
     def __post_init__(self):
         self.__configuration = ConfigurationFile(
@@ -109,14 +111,9 @@ class TuringBotModel(AbstractModel):
             logging.warning("Equations not yet available!")
 
     def predict(self, equation: str, features: DataFrame) -> array:
-        eval_globals = {"__builtins__": {
-            "cos": cos,
-            "sin": sin,
-            "abs": abs,
-            "fmod": fmod,
-            "round": round,
-            "pow": pow}}
-        predictions = predict(equation=equation, eval_globals=eval_globals, features=features)
+        predictions = self.predictor.predict(
+            equation=equation,
+            features=features)
         return array(predictions)
 
     def __get_smaller_error(self) -> float:

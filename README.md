@@ -23,9 +23,13 @@ poetry run python3 -m examples.simple_turingbot
 You can interact with TuringBot, PySR and Gplearn tools through the CLI demonstrated below (inside the root folder of the project):
 ```
 $ poetry run python3 -m sr.cli --help
-$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm turingbot
-$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm gplearn
+$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm turingbot
+$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm gplearn
 ```
+
+## Datasets
+The datasets used in the experiments come from [Kaggle](https://www.kaggle.com/competitions/titanic/data).
+
 
 ## Testing
 ```

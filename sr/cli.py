@@ -1,13 +1,15 @@
-import typer
-from typing import Dict
 from dataclasses import dataclass
+from typing import Dict
+
+import typer
 from pandas import DataFrame
 
 from sr.base_model import AbstractModel
-from sr.turingbot_demo.model import TuringBotModel
-from sr.pysr_demo.model import PySRModel
-from sr.gplearn_demo.classifier_model import GPLearnClassifierModel
 from sr.dataset import Dataset
+from sr.gplearn_demo.classifier_model import GPLearnClassifierModel
+from sr.pysr_demo.model import PySRModel
+from sr.turingbot_demo.model import TuringBotModel
+from sr.utils import evaluate
 
 
 @dataclass
@@ -15,12 +17,14 @@ class Context:
     strategy: AbstractModel
 
     def execute(self, features: DataFrame, target: DataFrame) -> None:
+        self.strategy.feature_names = features.columns
         self.strategy.create()
         self.strategy.fit(features=features, target=target)
         best_equation = self.strategy.best_equation
         predictions = self.strategy.predict(equation=best_equation, features=features)
         print("Best equation:", best_equation, sep="\n")
         print("Predictions:", predictions)
+        print("Training set F1-score: ", evaluate(target, predictions))
 
 
 app = typer.Typer()

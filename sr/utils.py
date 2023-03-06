@@ -1,5 +1,8 @@
 from typing import Dict, Any, List
 from pandas import DataFrame
+from sklearn.metrics import f1_score
+from math import cos, exp, sin, sqrt, tan, fmod
+from numpy import mod, square
 
 
 def predict(equation: str, eval_globals: Dict[str, Any], features: DataFrame) -> List[float]:
@@ -16,3 +19,25 @@ def predict(equation: str, eval_globals: Dict[str, Any], features: DataFrame) ->
         predicted = eval(equation, eval_globals)
         predictions.append(predicted)
     return predictions
+
+
+def evaluate(observed, predicted):
+    return f1_score(observed, predicted)
+
+
+def eval_globals_factory() -> Dict[str, str]:
+    eval_globals = {"__builtins__": {
+            "cos": cos,
+            "sin": sin,
+            "exp": exp,
+            "sqrt": sqrt,
+            "tan": tan,
+            "square": square,
+            "abs": abs,
+            "Abs": abs,
+            "mod": mod,
+            "Mod": mod,
+            "fmod": fmod,
+            "round": round,
+            "pow": pow,}}
+    return eval_globals
