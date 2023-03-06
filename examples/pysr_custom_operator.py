@@ -22,7 +22,7 @@ def main() -> None:
     survived =\
         Dataset.load(join("Datasets", "Titanic", "proceed", "survived.csv"))
     features =\
-        Dataset.load(join("Datasets", "Titanic", "proceed", "experiment_features.csv"))
+        Dataset.load(join("Datasets", "Titanic", "proceed", "train_experiment_features.csv"))
     equations = model.fit(features, survived)
     best_equation = model.best_equation
     print("Equations:", equations, sep="\n")
