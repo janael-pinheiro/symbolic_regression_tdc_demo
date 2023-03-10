@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "symbolic-regression-tdc"
+name = "symbolic-regression-tdc-demo"
 version = "0.1.0"
 description = ""
 authors = ["Janael Pinheiro <ajanaelpinheiro@gmail.com>"]
 readme = "README.md"
-packages = [{include = "symbolic_regression_tdc"}]
+packages = [{include = "symbolic_regression_tdc_demo"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

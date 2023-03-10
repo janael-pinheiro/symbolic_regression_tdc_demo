@@ -2,7 +2,6 @@ import logging
 import os
 import signal
 from dataclasses import dataclass, field
-from math import cos, exp, fmod, sin, sqrt, tan
 from os import system
 from os.path import join
 from shutil import which
