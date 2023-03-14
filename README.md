@@ -3,13 +3,14 @@
 This repository contains code for demo integration with TuringBot, PySR and Gplearn tools. Therefore, this code is highly experimental. Contributions are more than welcome.
 
 ## Install dependencies (insider project root folder)
-```
-$ sudo pip3 install poetry
-$ sudo poetry install
-```
-
 - Install [Julia](https://www.digitalocean.com/community/tutorials/how-to-install-julia-programming-language-on-ubuntu-22-04) (necessary for PySR);
 - Download and install [TuringBot for Linux](https://turingbotsoftware.com/download.html). Tested only on Linux;
+
+```
+$ sudo pip3 install poetry
+$ sudo poetry install --no-root
+$ sudo poetry run python3 -c "import pysr; pysr.install()"
+```
 
 
 How to run the examples:
