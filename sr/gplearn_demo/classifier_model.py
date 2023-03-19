@@ -43,6 +43,5 @@ class GPLearnClassifierModel(AbstractModel):
             equation=equation,
             features=features)
 
-    @property
     def best_equation(self) -> str:
-        return self.__base_estimator.best_equation
+        return self.__base_estimator.best_equation()

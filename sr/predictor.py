@@ -3,8 +3,10 @@ from typing import List
 
 from numpy import array, where
 from pandas import DataFrame
+from dataclasses import dataclass
 
 from sr.utils import eval_globals_factory
+from sr.exceptions import InvalidData
 
 
 class Predictor(ABC):
@@ -16,7 +18,7 @@ class Predictor(ABC):
         ...
 
 
-class BinaryClassifierPredictor(Predictor):
+class BasePredictor(Predictor):
     def predict(self, equation: str, features: DataFrame) -> array:
         """
         The eval function is insecure.
@@ -29,11 +31,13 @@ class BinaryClassifierPredictor(Predictor):
             feature_names=features.columns)
         for _, row in features.iterrows():
             features_dict = {feature_name: row[feature_name] for feature_name in features.columns}
-            eval_globals["__builtins__"].update({"features_dict":features_dict})
-            predicted = eval(equation, eval_globals)
+            eval_globals.update({"features_dict":features_dict})
+            try:
+                predicted = eval(equation, dict(eval_globals))
+            except ValueError as exception:
+                raise InvalidData from exception
             predictions.append(predicted)
-        binary_predictions = where(array(predictions) >= 0.5, 1, 0)
-        return binary_predictions
+        return predictions
 
     def __adapt_equation(
             self,
@@ -42,3 +46,21 @@ class BinaryClassifierPredictor(Predictor):
         for feature_name in feature_names:
             equation = equation.replace(feature_name, f"features_dict['{feature_name}']")
         return equation
+
+
+@dataclass
+class BinaryClassifier(Predictor):
+    base_predictor: Predictor
+
+    def predict(self, equation: str, features: DataFrame) -> array:
+        predictions = self.base_predictor.predict(equation=equation, features=features)
+        binary_predictions = where(array(predictions) >= 0.5, 1, 0)
+        return binary_predictions
+
+
+@dataclass
+class Regressor(Predictor):
+    base_predictor: Predictor
+
+    def predict(self, equation: str, features: DataFrame) -> array:
+        return self.base_predictor.predict(equation=equation, features=features)

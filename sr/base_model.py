@@ -21,6 +21,10 @@ class AbstractModel(ABC):
     def predict(self, equation: str, features: DataFrame) -> array:
         ...
 
+    @abstractmethod
+    def best_equation(self) -> str:
+        ...
+
 
 @dataclass
 class BaseModel(AbstractModel):
@@ -37,5 +41,8 @@ class BaseModel(AbstractModel):
         return self.model
 
     def predict(self, equation: str, features: DataFrame) -> array:
+        raise NotImplementedError()
+
+    def best_equation(self) -> str:
         raise NotImplementedError()
     

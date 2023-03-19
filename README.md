@@ -24,8 +24,12 @@ poetry run python3 -m examples.simple_turingbot
 You can interact with TuringBot, PySR and Gplearn tools through the CLI demonstrated below (inside the root folder of the project):
 ```
 $ poetry run python3 -m sr.cli --help
-$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm turingbot
-$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm gplearn
+$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm turingbot --objective classification
+$ poetry run python3 -m sr.cli --features-filepath Datasets/House_prices/proceed/train_experiment_features.csv --target-filepath Datasets/House_prices/proceed/prices.csv --algorithm turingbot --objective regression
+$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm pysr --objective classification
+$ poetry run python3 -m sr.cli --features-filepath Datasets/House_prices/proceed/train_experiment_features.csv --target-filepath Datasets/House_prices/proceed/prices.csv --algorithm pysr --objective regression
+$ poetry run python3 -m sr.cli --features-filepath Datasets/Titanic/proceed/train_experiment_features.csv --target-filepath Datasets/Titanic/proceed/survived.csv --algorithm gplearn --objective classification
+$ poetry run python3 -m sr.cli --features-filepath Datasets/House_prices/proceed/train_experiment_features.csv --target-filepath Datasets/House_prices/proceed/prices.csv --algorithm gplearn --objective regression
 ```
 
 ## Datasets
