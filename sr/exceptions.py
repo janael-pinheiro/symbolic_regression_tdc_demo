@@ -1,2 +1,6 @@
 class NotCreatedModel(Exception):
     ...
+
+
+class InvalidData(Exception):
+    ...

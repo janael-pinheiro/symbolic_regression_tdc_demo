@@ -25,6 +25,5 @@ class Model(AbstractModel):
     def predict(self, equation: str, features: DataFrame) -> array:
         return self.estimator.predict(features)
 
-    @property
     def best_equation(self) -> str:
         return self.equation_parser.parse(str(self.estimator._program))

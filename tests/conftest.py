@@ -8,7 +8,13 @@ from sr.gplearn_demo.classifier_model import GPLearnClassifierModel
 from sr.gplearn_demo.parser import GPlearnParser
 from sr.dataset import Dataset
 from sr.gplearn_demo.operators import AllowedOperators
+from sr.predictor import BasePredictor, BinaryClassifier
 
+
+@fixture(scope="function")
+def binary_predictor():
+    base_predictor = BasePredictor()
+    return BinaryClassifier(base_predictor)
 
 @fixture(scope="function")
 def pysr_parser():
@@ -16,8 +22,9 @@ def pysr_parser():
 
 
 @fixture(scope="function")
-def pysr_model(pysr_parser):
+def pysr_model(pysr_parser, binary_predictor):
     model = PySRModel(
+        predictor=binary_predictor,
         binary_operators=[
             AllowedBinaryOperator.PLUS.value,
             AllowedBinaryOperator.DIV.value],
@@ -32,8 +39,9 @@ def pysr_model(pysr_parser):
 
 
 @fixture(scope="function")
-def deterministic_pysr_model(pysr_parser):
+def deterministic_pysr_model(pysr_parser, binary_predictor):
     model = PySRModel(
+        predictor=binary_predictor,
         binary_operators=[
             AllowedBinaryOperator.PLUS.value,
             AllowedBinaryOperator.DIV.value],
@@ -69,7 +77,7 @@ def gplearn_deterministic_model(gplearn_parser, titanic_features):
         n_generations=100,
         random_state=42,
         feature_names=titanic_features.columns,
-        function_set= (
+        function_set=(
             AllowedOperators.ADD.value,
             AllowedOperators.SUB.value,
             AllowedOperators.MUL.value,

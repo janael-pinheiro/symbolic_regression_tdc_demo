@@ -10,14 +10,14 @@ from pysr import PySRRegressor
 from sr.base_model import AbstractModel, BaseModel
 from sr.equation_parser import EquationParser
 from sr.exceptions import NotCreatedModel
+from sr.predictor import Predictor
 from sr.pysr_demo.operators import AllowedBinaryOperator, AllowUnaryOperator
 from sr.pysr_demo.parser import PySREquationParser
-from sr.predictor import BinaryClassifierPredictor, Predictor
 
 
 @dataclass
 class PySRModel(AbstractModel):
-    predictor: Predictor = BinaryClassifierPredictor()
+    predictor: Predictor
     binary_operators: List[str] = field(default_factory=lambda: [bo.value for bo in AllowedBinaryOperator])
     unary_operators: List[str] = field(default_factory=lambda: [uo.value for uo in AllowUnaryOperator])
     equation_parser: EquationParser = PySREquationParser()
@@ -85,7 +85,6 @@ class PySRModel(AbstractModel):
             features=features)
         return array(predictions)
 
-    @property
     def best_equation(self) -> str:
         if self.model is None:
             raise NotCreatedModel("The model has not yet been created")

@@ -16,7 +16,7 @@ from pandas import DataFrame
 from tqdm import tqdm
 
 from sr.base_model import AbstractModel
-from sr.predictor import BinaryClassifierPredictor, Predictor
+from sr.predictor import BasePredictor, Predictor
 from sr.turingbot_demo.allow_target_delay_enum import AllowTargetDelayEnum
 from sr.turingbot_demo.bound_search_mode_enum import BoundSearchModeEnum
 from sr.turingbot_demo.force_all_variables_enum import ForceAllVariablesEnum
@@ -30,7 +30,7 @@ from sr.turingbot_demo.utils import ConfigurationFile
 
 @dataclass
 class TuringBotModel(AbstractModel):
-    predictor: Predictor = BinaryClassifierPredictor()
+    predictor: Predictor = BasePredictor()
     timeout_seconds: int = 300
     early_stop_condition: float = 0.01
     search_metric: SearchMetricEnum = SearchMetricEnum.RMSE
@@ -77,13 +77,13 @@ class TuringBotModel(AbstractModel):
         turingbot_executable_path = which("turingbot")
         with TemporaryDirectory() as temp_dir_name:
             output_filepath = join(temp_dir_name, "output.txt")
-            filepath = join(temp_dir_name, "turingbot_dataset.csv")
+            input_filepath = join(temp_dir_name, "turingbot_dataset.csv")
             configuration_filepath = join(temp_dir_name, "configuration.conf")
             self.__configuration.generate(filepath=configuration_filepath)
             dataset.to_csv(
-                filepath,
+                input_filepath,
                 index=False)
-            command = f"exec {turingbot_executable_path} {filepath} {configuration_filepath} --outfile {output_filepath} 1>/dev/null 2>/dev/null"
+            command = f"exec {turingbot_executable_path} {input_filepath} {configuration_filepath} --outfile {output_filepath} 1>/dev/null 2>/dev/null"
             with Popen(command, shell=True) as process:
                 sleep(10)
                 for _ in tqdm(range(self.timeout_seconds)):
@@ -96,11 +96,12 @@ class TuringBotModel(AbstractModel):
                 os.kill(process.pid+1, signal.SIGKILL)
     
     def __parse_equation_file(self, filepath: str):
+        START_CONTENT_LINE: int = 2
         try:
             with open(filepath, mode="r", encoding="utf-8") as file_reader:
-                    lines = file_reader.readlines()
-                    for i in range(2, len(lines)):
-                        line = lines[i].strip().split()
+                    content_lines = file_reader.readlines()[START_CONTENT_LINE:]
+                    for line in content_lines:
+                        line = line.strip().split()
                         self.__equations_dict["Size"].append(line[0])
                         self.__equations_dict["Error"].append(line[1])
                         self.__equations_dict["Equation"].append(line[2])
@@ -116,12 +117,19 @@ class TuringBotModel(AbstractModel):
         return array(predictions)
 
     def __get_smaller_error(self) -> float:
+        BEST_EQUATION_LINE: int = -1
+        BEST_EQUATION_ERROR_COLUMN: int = -2
         try:
-            return float(self.__equations.iloc[-1, -2])
+            return float(self.__equations.iloc[
+                BEST_EQUATION_LINE,
+                BEST_EQUATION_ERROR_COLUMN])
         except AttributeError:
             logging.warning("Equations not yet available!")
             return float_info.max
 
-    @property
     def best_equation(self) -> str:
-        return self.__equations.iloc[-1, -1]
+        BEST_EQUATION_LINE: int = -1
+        BEST_EQUATION_COLUMN: int = -1
+        return self.__equations.iloc[
+            BEST_EQUATION_LINE,
+            BEST_EQUATION_COLUMN]
